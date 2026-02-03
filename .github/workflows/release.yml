@@ -1,0 +1,38 @@
+# yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
+
+name: release
+
+on:
+  push:
+    tags:
+      - '[0-9]+.[0-9]+.[0-9]+'
+  workflow_dispatch:
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Get app version
+        id: app_tag
+        run: echo "current_version=$(cat app/build.gradle.kts | grep 'versionName\s*=' | cut -d'"' -f2)" >> $GITHUB_OUTPUT
+
+      - name: Check if tags match
+        if: ${{ github.ref_name != steps.app_tag.outputs.current_version }}
+        run: echo "GIT ${{ github.ref_name }} != APP ${{ steps.app_tag.outputs.current_version }}" && exit 1
+
+      - name: Set Up JDK
+        uses: actions/setup-java@v5
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+          cache: 'gradle'
+
+      - name: Change wrapper permissions
+        run: chmod +x ./gradlew
+
+      - name: Build APK release project
+        run: ./gradlew assemble
