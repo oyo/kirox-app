@@ -34,5 +34,12 @@ jobs:
       - name: Change wrapper permissions
         run: chmod +x ./gradlew
 
-      - name: Build APK release project
-        run: ./gradlew assemble
+      - name: Build debug APK
+        run: ./gradlew assembleDebug
+
+      - name: Releasing using Hub
+        uses: ShaunLWM/action-release-debugapk@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+          APP_FOLDER: app
+          RELEASE_TITLE: release
