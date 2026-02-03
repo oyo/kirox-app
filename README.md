@@ -10,7 +10,7 @@ Steps to build and install on your phone
 ```bash
 # on Mac
 brew install openjdk@17 android-platform-tools
-./gradlew assemble
+./gradlew assembleDebug
 adb install $(find app/build -name \*debug.apk)
 ```
 
