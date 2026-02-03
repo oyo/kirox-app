@@ -14,4 +14,8 @@ brew install openjdk@17 android-platform-tools
 adb install $(find app/build -name \*debug.apk)
 ```
 
-This assumes you have your Android device connected and adb is set up.
+Assuming you have:
+* homebrew installed
+* development mode activated on your Android device
+* connected the device to your computer
+* adb set up
